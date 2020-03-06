@@ -9,7 +9,6 @@ const TopicType = new GraphQLObjectType({
     _id: { type: GraphQLID },
     name: { type: GraphQLString },
     description: { type: GraphQLString },
-    imageUrl: { type: GraphQLString },
     followers: {
       type: new GraphQLList(require("./user_type")),
       resolve(parentValue) {
@@ -30,7 +29,15 @@ const TopicType = new GraphQLObjectType({
 
         return Topic.findData(parentValue.id, 'answers');
       }
-    }
+		},
+		comments: {
+			type: new GraphQLList(require("./comment_type")),
+			resolve(parentValue)
+			{
+
+				return Topic.findData(parentValue.id, 'users');
+			}
+		},
   })
 });
 

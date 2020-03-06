@@ -6,10 +6,12 @@
   border-color: initial;
   border-image: initial;
   margin-top: 30px;
+
 }
 
 .SideBar-innerbox {
     box-sizing: border-box;
+    position: sticky;
     top: 80px;
     overflow-y: auto;
     margin-left: -16px;

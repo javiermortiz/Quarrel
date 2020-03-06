@@ -26,7 +26,7 @@
     align-items: center;
 }
 
-.format {
+.answer-format button {
     margin-right: 8px;
     padding: 4px 8px;
     border: 1px solid rgba(0, 0, 0, 0);
@@ -34,7 +34,7 @@
     color: #5d5d5f;
 }
 
-.format:hover {
+.answer-format button:hover {
     border: 1px solid blue;
 }
 

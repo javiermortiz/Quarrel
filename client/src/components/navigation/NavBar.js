@@ -41,6 +41,7 @@ class NavBar extends React.Component {
             </div>
         )
     }
+		
 
     handleModal (e) {
         e.preventDefault();
@@ -58,7 +59,6 @@ class NavBar extends React.Component {
     }
 
     render() {
-        // let { data } = this.data;
         let { logout } = this.logout;
         return (
             <div className="nav-container">
@@ -97,14 +97,11 @@ class NavBar extends React.Component {
                         searchFocus={this.state.searchFocus}
                     />
                     <QuestionForm closeSearchModal={this.closeModal}/>
-					<SigninButton />
+										<SigninButton />
                     <ProfileUpload />
                 </div>
                 {this.state.showModal && <div className="search-modal-background" onClick={this.closeModal}></div>}
             </div>
-
-        );
-    }
-}
+				)}};
 
 export default NavBar;

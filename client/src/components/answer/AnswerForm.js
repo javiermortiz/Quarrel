@@ -49,7 +49,7 @@ class AnswerForm extends React.Component {
                 variables: { id: this.props.questionId } 
             }).question;
         } catch (err) {
-            return;
+            console.log(err);
         }
         if (question) {
             console.log(question);
@@ -64,15 +64,13 @@ class AnswerForm extends React.Component {
 
     handleSubmit(e, newAnswer) {
         e.preventDefault();
-        const div = document.getElementById("editable");
-        const cleanBody = clean(div.innerHTML)
-        console.log(cleanBody);
+        const cleanBody = clean(this.state.body)
         newAnswer({
             variables: {
                 body: cleanBody,
                 questionId: this.props.questionId
             }
-        }).then(({data}) => this.props.history.push(`/q/${data.newAnswer.question._id}`))
+        })
     }
 
     format(type) {
@@ -216,9 +214,7 @@ class AnswerForm extends React.Component {
         return (
             <Mutation 
                 mutation={NEW_ANSWER}
-                update={(cache, data) => {
-                    this.updateCache(cache, data);
-                }}
+                update={(cache, data) => this.updateCache(cache, data)}
                 onCompleted={data => {
                     this.props.toggleForm();
                 }}
@@ -232,15 +228,19 @@ class AnswerForm extends React.Component {
                                 </div>
                             </div>
                             <div className="answer-format">
-                                {linkMenu ? linkForm : formatButtons}
+                                <button className="format" id={bold ? "btn-active" : null}onClick={this.format("bold")}>
+                                    <i className="fas fa-bold"></i>
+                                </button>
+                                <button className="format" id={italic ? "btn-active" : null}onClick={this.format("italic")}>
+                                    <i className="fas fa-italic"></i>
+                                </button>
                             </div>
                             <div
                                 id="editable"
-                                className="answer-content edit-style"
+                                className="answer-content"
                                 contentEditable="true"
                                 spellCheck="false"
                                 onInput={this.update}
-                                onFocus={e => this.setState({linkMenu: false})}
                             >
                             </div>
 
@@ -260,4 +260,4 @@ class AnswerForm extends React.Component {
     }
 }
 
-export default withRouter(AnswerForm);
+export default AnswerForm;

@@ -10,7 +10,10 @@ const QuestionType = require("./types/question_type");
 const Question = mongoose.model("question");
 const AnswerType = require("./types/answer_type");
 const Answer = mongoose.model("answer");
+const CommentType = require("./types/comment_type");
+const Comment = mongoose.model("comment");
 const Upvote = mongoose.model("upvote");
+
 
 const mutation = new GraphQLObjectType({
     name: "Mutation",
@@ -80,13 +83,18 @@ const mutation = new GraphQLObjectType({
             async resolve(_, { body, questionId }, ctx) {
                 const validUser = await AuthService.verifyUser({ token: ctx.token });
                 if (validUser.loggedIn) {
-                    return new Answer({ body, user: validUser._id, question: questionId, date: new Date() }).save()
+                    return new Answer({ body, user: validUser._id, question: questionId }).save()
                         .then(answer => {
                             Question.findByIdAndUpdate(questionId, { $push: { answers: answer._id } }).exec();
                             return answer;
                         })
                 } else {
-                    throw new Error("Must be logged in to create an answer")
+                    // throw new Error("Must be logged in to create an answer")
+                    return new Answer({ body, user: validUser._id, question: questionId }).save()
+                        .then(answer => {
+                            Question.findByIdAndUpdate(questionId, { $push: { answers: answer._id } }).exec();
+                            return answer;
+                        })
                 }
             }
         },
@@ -95,15 +103,14 @@ const mutation = new GraphQLObjectType({
             args: {
                 name: { type: GraphQLString },
                 description: { type: GraphQLString },
-                imageUrl: { type: GraphQLString },
             },
-            async resolve(_, { name, description, imageUrl }, ctx) {
+            async resolve(_, { name, description }, ctx) {
                 const validUser = await AuthService.verifyUser({ token: ctx.token });
                 if (validUser.loggedIn) {
-                    return new Topic({ name, description, imageUrl }).save()
+                    return new Topic({ name, description }).save()
                 } else {
                     // throw new Error("Must be logged in to create an answer")
-                    return new Topic({ name, description, imageUrl }).save()
+                    return new Topic({ name, description }).save()
                 }
             }
         },
@@ -117,6 +124,29 @@ const mutation = new GraphQLObjectType({
                 return Topic.addUser(topicId, validUser._id).then(
                     User.addTopic(topicId, validUser._id)
                 )
+            }
+				},
+				newComment: {
+            type: CommentType,
+            args: {
+                comment: { type: GraphQLString },
+								answerId: { type: new GraphQLNonNull(GraphQLID) },
+            },
+            async resolve(_, { comment, answerId }, ctx) {
+                const validUser = await AuthService.verifyUser({ token: ctx.token });
+                if (validUser.loggedIn) {
+                    return new Comment({comment, user: validUser._id, answer: answerId }).save()
+                    .then(comment => {
+                        Answer.findByIdAndUpdate(answerId, { $push: { comments: comment._id}}).exec();
+                        return comment;
+                    })
+                } else {
+                    return new Comment({ comment, user: validUser._id, answer: answerId }).save()
+                        .then(comment => {
+                            Answer.findByIdAndUpdate(answerId, { $push: { comments: comment._id } }).exec();
+                            return comment;
+                        })
+                }
             }
         },
         updateProfileUrl: {

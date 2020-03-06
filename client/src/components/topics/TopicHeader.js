@@ -1,6 +1,6 @@
 import React from "react";
 import { Link, withRouter } from "react-router-dom"
-import { Mutation, Query } from "react-apollo"
+import { Mutation } from "react-apollo"
 import Mutations from "../../graphql/mutations"
 import Queries from "../../graphql/queries"
 import TopicNavBar from "./TopicNavBar.js"
@@ -12,12 +12,11 @@ class TopicHeader extends React.Component {
     super(props)
     this.handleClick = this.handleClick.bind(this)
     this.state = {
-      name: this.props.name,
       message: "",
-      follow: false
+      follow: this.props.topic.followers
     }
+    debugger
     this.renderFollowIcon = this.renderFollowIcon.bind(this)
-    this.renderImg = this.renderImg.bind(this)
   }
 
 
@@ -96,19 +95,22 @@ class TopicHeader extends React.Component {
             // }
           }
         </Query>
+
         <div className="TopicPageHeader-Top flex">
           <div className="photo-container">
             <div className="TopicPhoto">
               <div className="topic_photo_img">
+
                 <Link to={`/topic/${this.state.name}`} key={this.props.topic._id} >
                   <img className="icon" src={this.renderImg()}></img>
+
                 </Link>
               </div>
             </div>
           </div>
           <div className="topic-content">
             <div className="TopicName">
-              <h1>{this.state.name}</h1>
+              <h1>{this.props.topic.name}</h1>
             </div>
             <div>
               <div className="icon_action_bar">
@@ -117,12 +119,13 @@ class TopicHeader extends React.Component {
                     <span>
                       <Mutation
                         mutation={FOLLOW_TOPIC}
+                        update={this.updateCache}
                         onError={err => this.setState({ message: err.message })}
+
                       >
                         {(followTopic) => (
                           <div className="ui_button-inner flex" onClick={(e) => this.handleClick(e, followTopic)}>
                             <div className="ui_button_icon_wrapper" >
-
                               {this.renderFollowIcon()}
                             </div>
                             <div className="ui_button_count_wrapper">
@@ -162,10 +165,9 @@ class TopicHeader extends React.Component {
             </div>
           </div>
         </div>
-        <TopicNavBar topic={this.props.topic} />
       </div >
     );
   }
 }
 
-export default TopicHeader;
+export default withRouter(TopicHeader);

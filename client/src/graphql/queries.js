@@ -43,10 +43,20 @@ export default {
             body
             date
             user {
-              _id
               fname
               lname
               profileUrl
+						}
+					comments {
+						_id
+						comment
+						user {
+							_id
+							fname
+							lname
+							profileUrl
+						}
+					}
             }
             upvotes {
               user {
@@ -88,39 +98,70 @@ export default {
         topics{
           _id
           name
-          imageUrl
           followers {
             _id
           }
         }
       }
-    `,
-  FETCH_TOPIC_BY_NAME: gql`
-      query FetchTopic($name: String!) {
-        topic_by_name(name: $name) {
+		`,
+	FETCH_ANSWERS: gql`
+      query FetchAnswers {
+        answers {
           _id
-          name
-          imageUrl
-          followers {
-            _id
+          body
+          user {
+            email
           }
         }
       }
     `,
-  //A query to fetch topic by ID instead of name
-  FETCH_TOPIC: gql`
-      query FetchTopic($id: ID!) {
-        topic(_id: $ID) {
+	FETCH_ANSWER: gql`
+      query FetchAnswer($id: ID!) {
+        answer(_id: $id) {
           _id
-          name
-          imageUrl
-          followers {
+					body
+					question {
+						_id
+						question
+					}
+          comments {
             _id
+            comment
           }
         }
       }
+		`,
+		FETCH_COMMENTS: gql`
+      query FetchComments {
+        comments {
+          _id
+          comment
+          user {
+            email
+					}
+					answer {
+						_id
+						body
+					}
+        }
+      }
     `,
-  RELATED_QUESTIONS: gql`
+	FETCH_COMMENT: gql`
+      query FetchComment($id: ID!) {
+        comment(_id: $id) {
+          _id
+          comment
+          answer {
+            _id
+            body
+					}
+					user {
+						email
+					}
+        }
+      }
+    `,
+    RELATED_QUESTIONS: gql`
       query RelatedQuestions($questionId: ID!) {
         relatedQuestions(questionId: $questionId) {
           _id
@@ -129,15 +170,6 @@ export default {
             _id
           }
         } 
-      }
-    `,
-  SEARCH_TOPICS: gql`
-      query SearchTopics($query: String) {
-        searchTopics(query: $query) {
-          _id
-          name
-          imageUrl
-        }
       }
     `
 };

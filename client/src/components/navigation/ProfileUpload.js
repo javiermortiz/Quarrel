@@ -22,7 +22,7 @@ class ProfileUpload extends React.Component {
         if (!this.state.file) return null;
         const fd = new FormData();
         fd.append('image', this.state.file, this.state.file.name)
-        axios.post('/api/upload', fd)
+        axios.post('http://localhost:5000/api/upload', fd)
             .then(res => {
                 console.log(res);
                 updateProfilePic({

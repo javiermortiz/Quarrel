@@ -3,8 +3,8 @@
    width: 100%;
    position: fixed;
    display: flex;
-   justify-content: center;
-   overflow-y: auto;
+	 justify-content: center;
+	 overflow-y: auto;
 }
 
 .show-body {

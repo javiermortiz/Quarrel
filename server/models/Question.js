@@ -23,7 +23,13 @@ const QuestionSchema = new Schema({
             type: Schema.Types.ObjectId,
             ref: "answer"
         }
-    ]
+		],
+		comments: [
+			{
+				type: Schema.Types.ObjectId,
+				ref: "comment"
+			}
+		]
 });
 
 QuestionSchema.statics.findMatches = (question) => {
@@ -36,6 +42,7 @@ QuestionSchema.statics.findRelatedQuestions = (questionId) => {
     return Question.findById(questionId)
         .then(foundQuestion => {
             const questionText = findLongestWord(foundQuestion.question)
+            console.log(questionText);
             return Question.find({ question: { $regex: new RegExp(questionText, 'i') } });
         });
 }

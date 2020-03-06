@@ -3,14 +3,15 @@ const { GraphQLObjectType, GraphQLID, GraphQLString, GraphQLList } = graphql;
 
 const mongoose = require("mongoose");
 const Answer = mongoose.model("answer");
+const CommentType = require("./comment_type");
 const UpvoteType = require("./upvote_type");
+
 
 const AnswerType = new GraphQLObjectType({
   name: "AnswerType",
   fields: () => ({
     _id: { type: GraphQLID },
     body: { type: GraphQLString },
-    date: { type: GraphQLString },
     user: {
             type: require("./user_type"),
             resolve(parentValue) {
@@ -30,6 +31,14 @@ const AnswerType = new GraphQLObjectType({
             return answer.question
           });
       }
+		},
+		comments: {
+			type: new GraphQLList(CommentType),
+			resolve(parentValue) {
+				return Answer.findById(parentValue._id)
+					.populate("comments")
+					.then(answer => answer.comments);
+			}
     },
     upvotes: {
       type: new GraphQLList(UpvoteType),

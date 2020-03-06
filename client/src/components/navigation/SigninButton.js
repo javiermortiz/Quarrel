@@ -14,16 +14,16 @@ const SessionButton = props =>
 	{
 		e.preventDefault();
 		SessionUtil.logoutUser(client);
-		props.history.push("/");
+		// props.history.push("/");
 	};
 
 	const renderSessionButton = (client, isLoggedIn) =>
 	{
 		return isLoggedIn ? (
-			<button className="nav-ask-btn" onClick={logout(client)}>Logout</button>
+				<button className="nav-ask-btn" onClick={logout(client)}>Logout</button>
 		) : (
 				<button className="nav-ask-btn">
-					<Link to="/login" className="">Signin</Link>
+					<Link to="/session" className="">Signin</Link>
 				</button>
 			);
 	}

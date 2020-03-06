@@ -19,8 +19,18 @@ module.exports = function validateLoginInput(data) {
 					message: "Incorrect password. Reset Password",
 					isValid: false
 				};
-    }
+		}
+		
+		if (!Validator.isEmail(data.email)) {
+			return { message: "The email address you entered is not valid.", isValid: false };
+		}
 
+		if (!Validator.isLength(data.password, { min: 8 })) {
+			return {
+				message: "Please use a password at least 8 characters long.",
+				isValid: false
+			};
+		}
     return {
         message: "",
         isValid: true

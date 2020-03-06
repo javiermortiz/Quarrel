@@ -5,8 +5,10 @@ import * as SessionUtil from "../../util/session_util";
 
 const { LOGIN_USER } = Mutations;
 
-class Login extends React.Component {
-	constructor(props) {
+class Login extends React.Component
+{
+	constructor(props)
+	{
 		super(props);
 		this.state = {
 			email: "",
@@ -17,11 +19,13 @@ class Login extends React.Component {
 		this.demoLogin = this.demoLogin.bind(this);
 	}
 
-	update(field) {
+	update(field)
+	{
 		return e => this.setState({ [field]: e.target.value });
 	}
 
-	updateCache(client, { data }) {
+	updateCache(client, { data })
+	{
 		SessionUtil.saveUserToCache(client, data.login);
 		// console.log(data);
 		// client.writeData({
@@ -29,13 +33,16 @@ class Login extends React.Component {
 		// });
 	}
 
-	loginAndRedirectTo(url, data) {
+	loginAndRedirectTo(url, data)
+	{
 		SessionUtil.saveUserToLocalStorage(data.login);
 		this.props.history.push(url);
 	}
 
-	handleSubmit(Mutation, variables) {
-		return e => {
+	handleSubmit(Mutation, variables)
+	{
+		return e =>
+		{
 			e.preventDefault();
 			Mutation({ variables });
 		};
@@ -50,7 +57,8 @@ class Login extends React.Component {
 	// 	}).catch(err => console.log(err));
 	// }
 
-	demoLogin(e, loginUser) {
+	demoLogin(e, loginUser)
+	{
 		e.preventDefault();
 		loginUser({
 			variables: {
@@ -69,12 +77,14 @@ class Login extends React.Component {
 		console.log(errorArray)
 	}
 
-	render() {
+	render()
+	{
 		const { email, password } = this.state;
 		return (
 			<Mutation
 				mutation={LOGIN_USER}
-				onCompleted={data => {
+				onCompleted={data =>
+				{
 					const { token } = data.login;
 					localStorage.setItem("auth-token", token);
 					this.loginAndRedirectTo("/", data)

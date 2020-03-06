@@ -115,7 +115,13 @@ label {
 }
 
 .errorMsg {
-	position: absolute;
+	position: relative;
+	display: block;
 	top: 0;
-	color: black;
+	color: red;
+	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+	font-size: 14px;
+	box-sizing: content-box;
+	width: 100%;
+	opacity: 50%;
 }

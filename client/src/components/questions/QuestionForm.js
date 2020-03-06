@@ -170,6 +170,7 @@ class QuestionForm extends React.Component {
                                     <div className="add-question-modal-content">
                                         <Query
                                             query={CURRENT_USER} variables={{ token: localStorage.getItem("auth-token") }}>
+
                                             {({ loading, error, data }) => {
                                                 if (loading) return "Loading...";
                                                 if (error) return `Error! ${error.message}`
